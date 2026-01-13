@@ -99,19 +99,11 @@ class Pile:
                 if self.list[j+1].priorite < self.list[j].priorite:
                     self.list[j+1],self.list[j]=self.list[j],self.list[j+1]
 
+
 def charger(file,pile):
     try:
         c=file.defiler()
         pile.ajouter(c)
     except:
         print("file est vide")
-r=File()
 
-r.ajouter(1,15,"sid ahmed")
-r.ajouter(3,14,"ahmed")
-r.ajouter(1,20,"moulay ahmed")
-r.ajouter(4,15,"sid ahmed")
-# r.defiler()
-r.ajouter(3,3,"abdelrahman")
-r.sort()
-r.aficher()

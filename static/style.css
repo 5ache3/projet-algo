@@ -1,0 +1,81 @@
+/* Font Family */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Custom Scrollbar - Dark theme */
+div::-webkit-scrollbar {
+    width: 10px;
+}
+
+div::-webkit-scrollbar-track {
+    background: rgb(51, 65, 85);
+    border-radius: 10px;
+}
+
+div::-webkit-scrollbar-thumb {
+    background: rgb(99, 102, 241);
+    border-radius: 10px;
+}
+
+div::-webkit-scrollbar-thumb:hover {
+    background: rgb(79, 70, 229);
+}
+
+/* Form Input Enhancements */
+input:focus {
+    transform: scale(1.01);
+}
+
+/* Button Hover Effects */
+button {
+    position: relative;
+    overflow: hidden;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s, height 0.4s;
+}
+
+button:hover::before {
+    width: 300px;
+    height: 300px;
+}
