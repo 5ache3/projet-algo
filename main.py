@@ -67,11 +67,16 @@ class File:
         return [coli.json() for coli in self.list]
     
     def sort(self):
-        n=len(self.list)
+        n = len(self.list)
         for i in range(n):
-            for j in range(n-1-i):
-                if self.list[j+1].priorite>self.list[j].priorite:
-                    self.list[j+1],self.list[j]=self.list[j],self.list[j+1]
+            
+            min_ = i
+            for j in range(i + 1, n):
+                if self.list[j].priorite < self.list[min_].priorite:
+                    min_ = j
+            
+            if min_ !=i:
+                self.list[i], self.list[min_] = self.list[min_], self.list[i]
 class Pile:
     def __init__(self):
         self.list=[]
