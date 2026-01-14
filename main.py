@@ -33,6 +33,12 @@ class File:
         self.list=[]
         self.index=1
 
+    def est_vide(self):
+        return self.list == []
+    
+    def taille(self):
+        return len(self.list)
+    
     def ajouter(self,priorite,poid,destination=None):
         coli=Colis(
             id=self.index,
@@ -44,6 +50,7 @@ class File:
         self.list.append(coli)
         self.index+=1
 
+    
     def defiler(self):
         p=self.list[0]
         new_list=[]
@@ -80,7 +87,12 @@ class File:
 class Pile:
     def __init__(self):
         self.list=[]
-        
+    
+    def est_vide(self):
+        return self.list == []
+    
+    def taille(self):
+        return len(self.list)
 
     def ajouter(self,coli):
         coli.ordre=len(self.list)+1

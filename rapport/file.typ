@@ -68,3 +68,7 @@ jusqu'à ce que chaque sous-liste ne contienne qu'un seul élément, puis fusion
 )
 
 = 4. Comparaison Pratique
+#figure(
+  image("image.jpeg", width: 400pt),
+  caption: [Performance des Algorithmes de Tri en Fonction de la Taille des Données]
+)
