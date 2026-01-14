@@ -93,11 +93,36 @@ class Pile:
         return [coli.json() for coli in self.list]
     
     def sort(self):
-        n=len(self.list)
-        for i in range(n):
-            for j in range(n-1-i):
-                if self.list[j+1].priorite < self.list[j].priorite:
-                    self.list[j+1],self.list[j]=self.list[j],self.list[j+1]
+        
+        def merge_sort(lis):
+            if len(lis) <= 1:
+                return lis
+            
+            mid = len(lis) // 2
+            left = merge_sort(lis[:mid])
+            right = merge_sort(lis[mid:])
+            
+            return merge(left, right)
+        
+        def merge(left, right):
+            result = []
+            i = j = 0
+            
+            # Merge while both lists have elements
+            while i < len(left) and j < len(right):
+                if left[i].priorite < right[j].priorite:
+                    result.append(left[i])
+                    i += 1
+                else:
+                    result.append(right[j])
+                    j += 1
+            
+            # Add remaining elements
+            result.extend(left[i:])
+            result.extend(right[j:])
+            return result
+        
+        self.list = merge_sort(self.list)
 
 
 def charger(file,pile):

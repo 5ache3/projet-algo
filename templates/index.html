@@ -14,7 +14,7 @@
     <div class="max-w-7xl mx-auto animate-fade-in">
 
         <h1 class="text-4xl md:text-5xl font-bold text-white text-center mb-8 drop-shadow-lg">
-            🚚 Centre de tri des colis
+            Centre de tri des colis
         </h1>
 
         <!-- Flash Messages -->
@@ -36,7 +36,7 @@
         <!-- Add Package Form -->
         <div class="bg-slate-800 rounded-lg shadow-xl p-6 md:p-8 mb-8 border border-slate-700">
             <h2 class="text-2xl font-bold text-white mb-6">
-                ➕ Ajouter un colis
+                Ajouter un colis
             </h2>
 
             <form method="POST" action="{{ url_for('add_package') }}" id="addForm">
@@ -63,50 +63,39 @@
 
                 <button type="submit"
                     class="w-full sm:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
-                    ➕ Ajouter à la file
+                    Ajouter à la file
                 </button>
             </form>
         </div>
 
         <!-- Action Buttons -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-            <form method="POST" action="{{ url_for('process_package') }}">
-                <button type="submit"
-                    class="w-full px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
-                    ▶️ Traiter
-                </button>
-            </form>
-
-            <form method="POST" action="{{ url_for('unload_package') }}">
-                <button type="submit"
-                    class="w-full px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
-                    📤 Décharger
-                </button>
-            </form>
-
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             <form method="POST" action="{{ url_for('sort_queue') }}">
                 <button type="submit"
                     class="w-full px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
-                    🔄 Trier file
+                    Trier file d'attente
                 </button>
             </form>
 
-            <form method="POST" action="{{ url_for('sort_stack') }}">
+            <!-- Add Truck Form -->
+            <form method="POST" action="{{ url_for('add_truck') }}" class="flex gap-2">
+                <input type="text" name="truck_name" placeholder="Nom du camion (optionnel)"
+                    class="flex-1 px-4 py-3 bg-slate-700 text-white border border-slate-600 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500 outline-none transition-all">
                 <button type="submit"
-                    class="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
-                    🔄 Trier camion
+                    class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 whitespace-nowrap">
+                    Nouveau camion
                 </button>
             </form>
         </div>
 
-        <!-- Main Content - Queue and Stack -->
+        <!-- Main Content - Queue and Trucks -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Queue Section -->
             <div class="bg-slate-800 rounded-lg shadow-xl overflow-hidden border border-slate-700">
                 <div class="bg-slate-700 p-6">
                     <div class="flex justify-between items-center">
                         <h2 class="text-2xl font-bold text-white">
-                            📋 File d'attente (FIFO)
+                            File d'attente (FIFO)
                         </h2>
                         <span class="bg-blue-600 text-white px-4 py-2 rounded-full font-bold text-lg shadow-lg">
                             {{ queue_count }}
@@ -159,61 +148,93 @@
                 </div>
             </div>
 
-            <!-- Stack Section -->
+            <!-- Trucks Section -->
             <div class="bg-slate-800 rounded-lg shadow-xl overflow-hidden border border-slate-700">
                 <div class="bg-slate-700 p-6">
-                    <div class="flex justify-between items-center">
-                        <h2 class="text-2xl font-bold text-white">
-                            🚛 Camion (LIFO)
-                        </h2>
-                        <span class="bg-emerald-600 text-white px-4 py-2 rounded-full font-bold text-lg shadow-lg">
-                            {{ stack_count }}
-                        </span>
-                    </div>
+                    <h2 class="text-2xl font-bold text-white">
+                        Camions ({{ trucks|length }})
+                    </h2>
                 </div>
 
-                <div class="p-6 min-h-[300px] max-h-[600px] overflow-y-auto">
-                    {% if stack_count == 0 %}
-                    <div class="text-center text-gray-400 py-16 italic">
-                        Le camion est vide
-                    </div>
-                    {% else %}
-                    {% for colis in stack|reverse %}
-                    <div
-                        class="bg-white/90 p-5 mb-3 rounded-xl border-l-4 
-                                {% if colis.priorite == 5 %}border-l-rose-600
-                                {% elif colis.priorite == 4 %}border-l-red-500
-                                {% elif colis.priorite == 3 %}border-l-amber-500
-                                {% elif colis.priorite == 2 %}border-l-blue-500
-                                {% else %}border-l-emerald-500{% endif %}
-                                shadow-md hover:shadow-xl hover:scale-[1.02] transition-all duration-200 animate-slide-in">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-lg font-bold text-gray-800">Colis #{{ colis.id }}</span>
-                            <span class="px-4 py-1 bg-gradient-to-r 
-                                        {% if colis.priorite == 5 %}from-rose-500 to-red-600
-                                        {% elif colis.priorite == 4 %}from-red-400 to-red-500
-                                        {% elif colis.priorite == 3 %}from-amber-400 to-orange-500
-                                        {% elif colis.priorite == 2 %}from-blue-400 to-blue-500
-                                        {% else %}from-emerald-400 to-green-500{% endif %}
-                                        text-white font-semibold rounded-full text-sm shadow-md">
-                                Priorité {{ colis.priorite }}
-                            </span>
+                <div class="p-6 max-h-[600px] overflow-y-auto space-y-4">
+                    {% for truck_id, truck in trucks.items() %}
+                    <div class="bg-slate-700 rounded-lg border border-slate-600 overflow-hidden">
+                        <!-- Truck Header -->
+                        <div class="bg-slate-600 p-4">
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="text-xl font-bold text-white">{{ truck.name }}</h3>
+                                <span class="bg-emerald-600 text-white px-3 py-1 rounded-full font-bold shadow-lg">
+                                    {{ truck.pile.list|length }}
+                                </span>
+                            </div>
+                            
+                            <!-- Truck Actions -->
+                            <div class="grid grid-cols-3 gap-2">
+                                <form method="POST" action="{{ url_for('process_package', truck_id=truck_id) }}">
+                                    <button type="submit"
+                                        class="w-full px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
+                                        Traiter
+                                    </button>
+                                </form>
+                                
+                                <form method="POST" action="{{ url_for('unload_package', truck_id=truck_id) }}">
+                                    <button type="submit"
+                                        class="w-full px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg shadow hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
+                                        Décharger
+                                    </button>
+                                </form>
+                                
+                                <form method="POST" action="{{ url_for('sort_stack', truck_id=truck_id) }}">
+                                    <button type="submit"
+                                        class="w-full px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold rounded-lg shadow hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
+                                        Trier
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                        <div class="grid grid-cols-3 gap-3 text-sm text-gray-600">
-                            <div>
-                                <span class="font-semibold text-gray-800">Poids:</span> {{ colis.poid }} kg
+
+                        <!-- Truck Contents -->
+                        <div class="p-4 max-h-[300px] overflow-y-auto">
+                            {% if truck.pile.list|length == 0 %}
+                            <div class="text-center text-gray-400 py-8 italic text-sm">
+                                Camion vide
                             </div>
-                            <div>
-                                <span class="font-semibold text-gray-800">Destination:</span> {{ colis.destination or
-                                'Non spécifié' }}
+                            {% else %}
+                            {% for colis in truck.pile.list|reverse %}
+                            <div
+                                class="bg-white/90 p-3 mb-2 rounded-lg border-l-4 
+                                        {% if colis.priorite == 5 %}border-l-rose-600
+                                        {% elif colis.priorite == 4 %}border-l-red-500
+                                        {% elif colis.priorite == 3 %}border-l-amber-500
+                                        {% elif colis.priorite == 2 %}border-l-blue-500
+                                        {% else %}border-l-emerald-500{% endif %}
+                                        shadow hover:shadow-md transition-all duration-200">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm font-bold text-gray-800">Colis #{{ colis.id }}</span>
+                                    <span class="px-3 py-0.5 bg-gradient-to-r 
+                                                {% if colis.priorite == 5 %}from-rose-500 to-red-600
+                                                {% elif colis.priorite == 4 %}from-red-400 to-red-500
+                                                {% elif colis.priorite == 3 %}from-amber-400 to-orange-500
+                                                {% elif colis.priorite == 2 %}from-blue-400 to-blue-500
+                                                {% else %}from-emerald-400 to-green-500{% endif %}
+                                                text-white font-semibold rounded-full text-xs shadow">
+                                        P{{ colis.priorite }}
+                                    </span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                                    <div>
+                                        <span class="font-semibold text-gray-800">Poids:</span> {{ colis.poid }} kg
+                                    </div>
+                                    <div>
+                                        <span class="font-semibold text-gray-800">Dest:</span> {{ colis.destination or 'N/A' }}
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <span class="font-semibold text-gray-800">Ordre:</span> #{{ colis.ordre }}
-                            </div>
+                            {% endfor %}
+                            {% endif %}
                         </div>
                     </div>
                     {% endfor %}
-                    {% endif %}
                 </div>
             </div>
         </div>

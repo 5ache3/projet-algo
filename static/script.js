@@ -23,13 +23,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (priority < 1 || priority > 5) {
                 e.preventDefault();
-                alert('⚠️ La priorité doit être entre 1 et 5');
+                alert('La priorité doit être entre 1 et 5');
                 return false;
             }
 
             if (weight <= 0) {
                 e.preventDefault();
-                alert('⚠️ Le poids doit être supérieur à 0');
+                alert('Le poids doit être supérieur à 0');
                 return false;
             }
         });
